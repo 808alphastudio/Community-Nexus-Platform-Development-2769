@@ -4,7 +4,7 @@ import * as FiIcons from 'react-icons/fi';
 import SafeIcon from '../components/common/SafeIcon';
 import useStore from '../store/useStore';
 
-const { FiBook, FiBarChart, FiCalendar, FiMapPin, FiUsers, FiClock } = FiIcons;
+const { FiBook, FiBarChart, FiMapPin, FiUsers, FiMessageCircle, FiHeart } = FiIcons;
 
 const CommunityHub = () => {
   const { cityName } = useStore();
@@ -13,8 +13,8 @@ const CommunityHub = () => {
   const sections = [
     { id: 'localpedia', label: 'Localpedia', icon: FiBook },
     { id: 'data', label: 'Data', icon: FiBarChart },
-    { id: 'events', label: 'Events', icon: FiCalendar },
-    { id: 'directory', label: 'Directory', icon: FiMapPin }
+    { id: 'directory', label: 'Directory', icon: FiMapPin },
+    { id: 'community', label: 'Community', icon: FiUsers }
   ];
 
   const localpediaEntries = [
@@ -51,30 +51,37 @@ const CommunityHub = () => {
     { label: 'Businesses', value: '2,156', change: '+5.2%' }
   ];
 
-  const upcomingEvents = [
+  const communityPosts = [
     {
       id: 1,
-      title: 'City Council Meeting',
-      date: '2024-01-18',
-      time: '7:00 PM',
-      location: 'City Hall',
-      category: 'Government'
+      author: 'Sarah M.',
+      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop',
+      content: 'Looking for volunteers for this weekend\'s park cleanup! Anyone interested in joining?',
+      likes: 24,
+      comments: 8,
+      time: '2 hours ago',
+      type: 'volunteer'
     },
     {
       id: 2,
-      title: 'Farmers Market',
-      date: '2024-01-20',
-      time: '8:00 AM',
-      location: 'Main Street',
-      category: 'Community'
+      author: 'Mike R.',
+      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop',
+      content: 'Just moved to the downtown area! Any recommendations for good coffee shops?',
+      likes: 15,
+      comments: 12,
+      time: '4 hours ago',
+      type: 'question'
     },
     {
       id: 3,
-      title: 'Library Book Club',
-      date: '2024-01-22',
-      time: '6:30 PM',
-      location: 'Public Library',
-      category: 'Culture'
+      author: 'Local Arts Council',
+      avatar: 'https://images.unsplash.com/photo-1523365774497-afbf95f49fb5?w=50&h=50&fit=crop',
+      content: 'Art in the Park series starts next week! Every Wednesday evening in Central Park.',
+      likes: 45,
+      comments: 6,
+      time: '1 day ago',
+      type: 'announcement',
+      image: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=300&h=200&fit=crop'
     }
   ];
 
@@ -94,7 +101,6 @@ const CommunityHub = () => {
                 Add Entry
               </motion.button>
             </div>
-            
             {localpediaEntries.map((entry) => (
               <motion.div
                 key={entry.id}
@@ -102,11 +108,7 @@ const CommunityHub = () => {
                 className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden"
               >
                 <div className="flex">
-                  <img
-                    src={entry.image}
-                    alt={entry.title}
-                    className="w-24 h-24 object-cover"
-                  />
+                  <img src={entry.image} alt={entry.title} className="w-24 h-24 object-cover" />
                   <div className="p-4 flex-1">
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-1">
                       {entry.title}
@@ -131,7 +133,6 @@ const CommunityHub = () => {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
               Community Statistics
             </h3>
-            
             <div className="grid grid-cols-2 gap-4">
               {communityStats.map((stat, index) => (
                 <motion.div
@@ -147,81 +148,118 @@ const CommunityHub = () => {
                   <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                     {stat.label}
                   </div>
-                  <div className={`text-xs font-medium ${
-                    stat.change.startsWith('+') ? 'text-green-600' : 'text-red-600'
-                  }`}>
+                  <div className={`text-xs font-medium ${stat.change.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}>
                     {stat.change} from last year
                   </div>
                 </motion.div>
               ))}
             </div>
+          </div>
+        );
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-              <h4 className="font-semibold text-gray-900 dark:text-white mb-3">
-                Current Weather
-              </h4>
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-3xl font-bold text-gray-900 dark:text-white">72°F</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Partly Cloudy</div>
-                </div>
-                <div className="text-4xl">🌤️</div>
-              </div>
+      case 'community':
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Community Discussion
+              </h3>
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                className="bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2"
+              >
+                <SafeIcon icon={FiMessageCircle} className="w-4 h-4" />
+                <span>New Post</span>
+              </motion.button>
+            </div>
+
+            <div className="space-y-4">
+              {communityPosts.map((post) => (
+                <motion.div
+                  key={post.id}
+                  whileHover={{ scale: 1.01 }}
+                  className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700"
+                >
+                  <div className="flex items-start space-x-3 mb-3">
+                    <img
+                      src={post.avatar}
+                      alt={post.author}
+                      className="w-10 h-10 rounded-full"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-medium text-gray-900 dark:text-white">
+                          {post.author}
+                        </h4>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                          {post.time}
+                        </span>
+                      </div>
+                      <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium mt-1 ${
+                        post.type === 'volunteer' ? 'bg-green-100 text-green-800' :
+                        post.type === 'question' ? 'bg-blue-100 text-blue-800' :
+                        'bg-purple-100 text-purple-800'
+                      }`}>
+                        {post.type.charAt(0).toUpperCase() + post.type.slice(1)}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <p className="text-gray-600 dark:text-gray-400 mb-3">
+                    {post.content}
+                  </p>
+
+                  {post.image && (
+                    <img
+                      src={post.image}
+                      alt="Post attachment"
+                      className="rounded-lg mb-3 w-full h-48 object-cover"
+                    />
+                  )}
+
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center space-x-4">
+                      <button className="flex items-center space-x-1 text-gray-500 hover:text-primary-600">
+                        <SafeIcon icon={FiHeart} className="w-4 h-4" />
+                        <span>{post.likes}</span>
+                      </button>
+                      <button className="flex items-center space-x-1 text-gray-500 hover:text-primary-600">
+                        <SafeIcon icon={FiMessageCircle} className="w-4 h-4" />
+                        <span>{post.comments} comments</span>
+                      </button>
+                    </div>
+                    <button className="text-primary-600 hover:text-primary-700">
+                      Reply
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         );
 
-      case 'events':
+      case 'directory':
         return (
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Upcoming Events
-              </h3>
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                className="bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium"
-              >
-                Add Event
-              </motion.button>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              Community Directory
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {['Schools', 'Parks', 'Libraries', 'Community Centers'].map((facility) => (
+                <motion.div
+                  key={facility}
+                  whileHover={{ scale: 1.01 }}
+                  className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700"
+                >
+                  <h4 className="font-medium text-gray-900 dark:text-white mb-2">
+                    {facility}
+                  </h4>
+                  <button className="text-primary-600 text-sm hover:text-primary-700">
+                    View All →
+                  </button>
+                </motion.div>
+              ))}
             </div>
-
-            {upcomingEvents.map((event) => (
-              <motion.div
-                key={event.id}
-                whileHover={{ scale: 1.01 }}
-                className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900 dark:text-white mb-1">
-                      {event.title}
-                    </h4>
-                    <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
-                      <div className="flex items-center space-x-2">
-                        <SafeIcon icon={FiCalendar} className="w-4 h-4" />
-                        <span>{new Date(event.date).toLocaleDateString()}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <SafeIcon icon={FiClock} className="w-4 h-4" />
-                        <span>{event.time}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <SafeIcon icon={FiMapPin} className="w-4 h-4" />
-                        <span>{event.location}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    event.category === 'Government' ? 'bg-blue-100 text-blue-800' :
-                    event.category === 'Community' ? 'bg-green-100 text-green-800' :
-                    'bg-purple-100 text-purple-800'
-                  }`}>
-                    {event.category}
-                  </span>
-                </div>
-              </motion.div>
-            ))}
           </div>
         );
 
